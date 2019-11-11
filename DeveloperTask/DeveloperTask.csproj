@@ -173,6 +173,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
+    <Content Include="mysql_db\developer_task.sql" />
     <Content Include="Resouces\css\index.css" />
     <Content Include="Resouces\img\hubei_wudangshan.jpg" />
     <Content Include="Resouces\img\task.png" />
