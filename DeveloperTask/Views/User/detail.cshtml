@@ -1,0 +1,113 @@
+﻿
+@{
+    var type = Models.Configs.task_type[ViewBag.detail.task_type];
+    var priority = Models.Configs.task_priority[ViewBag.detail.task_priority];
+    ViewBag.Title = priority + type + "-" + ViewBag.detail.task_name;
+}
+<link href="~/Resouces/js/photoviewer/photoviewer.min.css" rel="stylesheet" />
+<script src="~/Resouces/js/photoviewer/photoviewer.min.js"></script>
+<div class="center">
+    <div class="map">当前位置：<a href="/user/center">我的任务</a><i class="iconfont icon-arrow-right"></i>@ViewBag.detail.task_name</div>
+    <div class="detail">
+        <h2>@ViewBag.detail.task_name</h2>
+        <div class="tool">
+            <label>@priority@type</label>
+            <label>任务周期：@Convert.ToDateTime(ViewBag.detail.task_begin_time).ToString("yyyy-MM-dd")—@Convert.ToDateTime(ViewBag.detail.task_end_time).ToString("yyyy-MM-dd")</label>
+            @if (ViewBag.detail.task_change_time == null)
+            {
+                <label>创建时间：@Convert.ToDateTime(ViewBag.detail.task_create_time).ToString("yyyy-MM-dd HH:mm:ss")</label>
+            }
+            else
+            {
+                <label>最后更新：@Convert.ToDateTime(ViewBag.detail.task_change_time).ToString("yyyy-MM-dd HH:mm:ss")</label>
+            }
+        </div>
+        <div class="line"></div>
+        <div class="task_content">@Html.Raw(ViewBag.detail.task_content)</div>
+    </div>
+</div>
+<style>
+    .time-footer { position:fixed;bottom:30px; padding:20px 0; width:100%;background:#333;color:#fff }
+</style>
+<div class="time-footer">
+    <div class="center" id="time">
+        <div v-if="!isstart">
+            设置任务倒计时：
+            <select v-model="minute">
+                <option value="1">1</option>
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="30">30</option>
+                <option value="45">45</option>
+                <option value="60">60</option>
+            </select>
+            分钟
+            <button v-on:click="start">开始计时</button>
+        </div>
+        <div class="backtime" v-else>
+            还剩：{{minute}}分{{second}}秒<button v-on:click="cancel">取消</button>
+        </div>
+    </div>
+</div>
+<script>
+
+    new Vue({
+        el: '#time',
+        data: {
+            oldtitle:'@ViewBag.Title',
+            minute: 30,
+            minuteClone:0,
+            second: 59,
+            isstart: false,
+            clearint:null
+        },
+        methods: {
+            start: function () {
+                var self = this;
+                if (self.minute <= 0) { return;}
+                self.isstart = true;
+                self.minuteClone = self.minute;
+                self.minute--;
+                self.clearint= setInterval(function () {
+                    self.second--;
+                    if (self.second <= -1) {
+                        self.second = 59;
+                        self.minute--;
+                    }
+                    document.title = "剩"+self.minute + "分" + self.second + "秒" +"，"+ self.oldtitle;
+                    if (self.minute == 0 && self.second == 0) {
+                        alert(self.minuteClone+'分钟时间已到');
+                        self.isstart = false;
+                        self.minute = self.minuteClone;
+                        self.second = 59;
+                        clearInterval(self.clearint);
+                    }
+                }, 1000);
+            },
+            cancel: function () {
+                var self = this;
+                document.title = self.oldtitle;
+                self.isstart = false;
+                self.minute = self.minuteClone;
+                self.second = 59;
+                clearInterval(self.clearint);
+            }
+        },
+        mounted: function () {
+        }
+    })
+
+
+    $('.task_content img').click(function (e) {
+        e.preventDefault();
+        var items = [],
+            options = { index: $(this).index() };
+        $('.task_content img').each(function () {
+            let src = $(this).attr('src');
+            items.push({ src: src });
+        });
+        new PhotoViewer(items, options);
+    });
+
+
+</script>

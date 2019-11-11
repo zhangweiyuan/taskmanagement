@@ -1,0 +1,85 @@
+﻿
+@{
+    ViewBag.Title = "小组管理";
+}
+<div class="center">
+    <div class="map">当前位置：<a href="/user/center">首页</a><i class="iconfont icon-arrow-right"></i>小组管理</div>
+    <div class="from" id="groups">
+        <div class="filter">
+            <div>
+            </div>
+            <div>
+                <a href="/manage/addgroup"><i class="iconfont icon-writefill"></i>创建小组</a>
+            </div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <td>小组名字</td>
+                    <td>成员</td>
+                    <td>添加时间</td>
+                    <td>操作</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(item,index) in groups">
+                    <td class="name" style="width:30%">{{item.g.name}}</td>
+                    <td class="cen" style="width:20%"><a v-bind:href="'/manage/editgroup/'+item.g.id">{{item.count}}</a>人</td>
+                    <td class="cen" style="width:20%">{{item.g.create_time}}</td>
+                    <td class="operate">
+                        <a v-bind:href="'/manage/editgroup/'+item.g.id"><i class="iconfont icon-edit"></i>edit</a>
+                        <a href="javascript:void(0);" v-on:click="remove(item.g.id,index)"><i class="iconfont icon-delete"></i>delete</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    Number.prototype.DecimalSystem = function () {
+        return this < 10 ? '0' + this : this;
+    }
+
+    new Vue({
+        el: '#groups',
+        data: {
+            groups: []
+        },
+        methods: {
+            GetGroups: function () {
+                var self = this;
+                layer.load();
+                $.getJSON('/manage/Querygroups', function (res) {
+                     layer.close();
+                    if (parseInt(res.result)) {
+                        for (var i = 0; i < res.data.length; i++) {
+                            var date = new Date(parseInt(res.data[i].g.create_time.replace("/Date(", "").replace(")/", ""), 10));
+                            res.data[i].g.create_time = date.getFullYear() + "-" + (date.getMonth() + 1).DecimalSystem() + "-" + date.getDate().DecimalSystem();
+                        }
+                        self.groups = res.data;
+                    } else {
+                         layer.warn('获取失败');
+                    }
+                })
+            },
+            remove: function (_id, _index) {
+                var self = this;
+                if (confirm('确定要删除吗?')) {
+                    layer.load();
+                    $.post('/manage/RemoveGroup', { id: _id }, function (res) {
+                        layer.close();
+                        if (parseInt(res.result)) {
+                            layer.ok('删除成功');
+                            self.groups.splice(_index, 1);
+                        } else {
+                            layer.warn('删除失败');
+                        }
+                    })
+                }
+            }
+        },
+        mounted: function () {
+            this.GetGroups();
+        }
+    })
+</script>

@@ -1,0 +1,88 @@
+﻿
+@{
+    ViewBag.Title = "员工管理";
+}
+<div class="center">
+    <div class="map">当前位置：<a href="/user/center">首页</a><i class="iconfont icon-arrow-right"></i>员工管理</div>
+    <div class="from" id="users">
+        <div class="filter">
+            <div>
+            </div>
+            <div>
+                <a href="/manage/adduser"><i class="iconfont icon-writefill"></i>添加员工</a>
+                <a href="/manage/groups"><i class="iconfont icon-group_fill"></i>小组管理</a>
+            </div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <td>姓名</td>
+                    <td>账号</td>
+                    <td>Email</td>
+                    <td>添加时间</td>
+                    <td>操作</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(item,index) in users">
+                    <td class="name">{{item.name}} <i title="是管理员" v-if="item.is_manage==1" class="iconfont icon-ren"></i></td>
+                    <td class="account">{{item.account}}<a v-bind:href="'/manage/resetPassword/'+item.id">重置密码</a></td>
+                    <td>{{item.email}}</td>
+                    <td>{{item.create_time}}</td>
+                    <td class="operate">
+                        <a v-bind:href="'/manage/edituser/'+item.id"><i class="iconfont icon-edit"></i>edit</a>
+                        <a href="javascript:void(0);" v-on:click="remove(item.id,index)"><i class="iconfont icon-delete"></i>delete</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    Number.prototype.DecimalSystem = function () {
+        return this < 10 ? '0' + this : this;
+    }
+
+    new Vue({
+        el: '#users',
+        data: {
+            users: []
+        },
+        methods: {
+            GetUsers: function () {
+                var self = this;
+                layer.load();
+                $.getJSON('/manage/QueryUsers', function (res) {
+                     layer.close();
+                    if (parseInt(res.result)) {
+                        for (var i = 0; i < res.data.length; i++) {
+                            var date = new Date(parseInt(res.data[i].create_time.replace("/Date(", "").replace(")/", ""), 10));
+                            res.data[i].create_time = date.getFullYear() + "-" + (date.getMonth() + 1).DecimalSystem() + "-" + date.getDate().DecimalSystem();
+                        }
+                        self.users = res.data;
+                    } else {
+                         layer.warn('获取失败');
+                    }
+                })
+            },
+            remove: function (_id, _index) {
+                var self = this;
+                if (confirm('确定要删除吗?')) {
+                    layer.load();
+                    $.post('/manage/removeUser', { id: _id }, function (res) {
+                        layer.close();
+                        if (parseInt(res.result)) {
+                            layer.ok('删除成功');
+                            self.users.splice(_index, 1);
+                        } else {
+                            layer.warn('删除失败');
+                        }
+                    })
+                }
+            }
+        },
+        mounted: function () {
+            this.GetUsers();
+        }
+    })
+</script>

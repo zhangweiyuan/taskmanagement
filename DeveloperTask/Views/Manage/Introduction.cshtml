@@ -1,0 +1,27 @@
+﻿@{
+    ViewBag.Title = "规则介绍";
+}
+<div class="center">
+    <div class="map">当前位置：<a href="/user/center">首页</a><i class="iconfont icon-arrow-right"></i>规则介绍</div>
+    <div id="create" class="from createuser">
+        <h1>规则介绍</h1>
+        <div style="line-height:2">
+            <ul>
+                <li>
+                    当员工拥有发布任务的权力时
+                    <ol>
+                        <li>A发布一条任务，如果没有设置执行人，那么A发布的这条任务只能在A自己的【<b><a href="/manage/tasks">任务管理</a></b>】中管理</li>
+                        <li>A发布一条任务，如果设置执行人A和B，那么A和B可以在自己的【<b><a href="/user/center">我的任务</a></b>】看到这条任务，同时A可以在自己的【<b><a href="/manage/tasks">任务管理</a></b>】中心管理</li>
+                    </ol>
+                </li>
+                <li>
+                    任务优先级说明
+                    <ol>
+                        <li>默认按照：紧急、优先、普通排序，其次按照任务的开始时间降序排序，再其次按照任务的创建时间和最后修改时间降序排序</li>
+                    </ol>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+

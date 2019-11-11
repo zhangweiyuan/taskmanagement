@@ -1,0 +1,57 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "登录你的 Task Management 账户";
+}
+<style>
+    body { background: url(/Resouces/img/hubei_wudangshan.jpg); }
+    .login { border-radius: 0px; background: rgba(255,255,255,1); padding: 30px; width: 450px; box-sizing: border-box; position: fixed; top: 50%; margin-top: -160px; left: 50%; margin-left: -225px }
+</style>
+<div class="center">
+    <div class="login">
+        <div><img src="~/Resouces/img/task.png" /></div>
+        <div id="login" class="from" style="margin-bottom:0;">
+            <div class="item">
+                <div class="title">账号</div>
+                <div class="input"><input type="text" value="" placeholder="请输入账号" v-model="account" /></div>
+            </div>
+            <div class="item">
+                <div class="title">密码</div>
+                <div class="input"><input type="password" value="" placeholder="请输入密码" v-model="password" /></div>
+            </div>
+            <div class="item" style="margin-bottom:0;text-align:right;">
+                <button v-on:click="login">登录</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    new Vue({
+        el: '#login',
+        data: {
+            account: '',
+            password: ''
+        },
+        methods: {
+            login: function () {
+                var self = this;
+                layer.load();
+                $.post('/user/loginaction', self._data, function (res) {
+                    layer.close();
+                    if (parseInt(res.result)) {
+                        localStorage.setItem("account", self.account);
+                        location.href = "/user/center";
+                    } else {
+                        layer.warn(res.message);
+                    }
+                })
+            }
+        },
+        mounted: function () {
+            if (localStorage.getItem("account") != null) {
+                this.account == localStorage.getItem("account");
+            }
+        }
+    })
+
+</script>

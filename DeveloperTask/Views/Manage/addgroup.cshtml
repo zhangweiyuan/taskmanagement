@@ -1,0 +1,78 @@
+﻿@{
+    ViewBag.Title = "添加小组";
+}
+<div class="center">
+    <div class="map">当前位置：<a href="/user/center">首页</a><i class="iconfont icon-arrow-right"></i><a href="/manage/groups">小组管理</a><i class="iconfont icon-arrow-right"></i>添加小组</div>
+
+    <div id="create" class="from publish">
+        <div class="item">
+            <div class="title">小组名字</div>
+            <div class="input"><input type="text" value="" placeholder="请输入小组名字" v-model="name" /></div>
+        </div>
+        <div class="item">
+            <div class="title">设置成员</div>
+            <div class="input">
+                <div class="executor">
+                    <div v-for="item in users" v-bind:class="item.IsChecked?'cur':''" v-on:click="item.IsChecked=!item.IsChecked"><label class="user"><i v-bind:class="'iconfont '+(item.IsChecked?'icon-squarecheckfill':'icon-square')"></i><span>{{item.name}}</span></label></div>
+                </div>
+            </div>
+        </div>
+        <div class="item">
+            <button v-on:click="create">添加</button>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    new Vue({
+        el: '#create',
+        data: {
+            name: '',
+            users: []
+        },
+        methods: {
+            getDeveloper: function () {
+                var self = this;
+                layer.load();
+                $.getJSON('/manage/QueryUsers', function (res) {
+                    layer.close();
+                    if (parseInt(res.result)) {
+                        for (var i = 0; i < res.data.length; i++) {
+                            res.data[i].IsChecked = false;
+                        }
+                        self.users = res.data;
+                    } else {
+                        layer.warn('成员加载失败');
+                    }
+                })
+            },
+            create: function () {
+                var self = this;
+                var newData = $.extend( {},self._data);
+                newData.users = [];
+                for (var i = 0; i < self.users.length; i++) {
+                    if (self.users[i].IsChecked) {
+                        newData.users.push(self.users[i].id);
+                    }
+                }
+                newData.users = newData.users.join(',');
+
+                layer.load();
+                
+                $.post('/manage/addgroup', newData, function (res) {
+                    layer.close();
+                    if (parseInt(res.result)) {
+                        layer.ok2(res.message, "/manage/groups");
+                    } else {
+                        layer.warn(res.message);
+                    }
+                })
+            }
+        },
+        mounted: function () {
+            this.getDeveloper();
+        }
+    })
+
+</script>

@@ -1,0 +1,95 @@
+﻿@{
+    ViewBag.Title = "添加员工";
+}
+<div class="center">
+    <div class="map">当前位置：<a href="/user/center">首页</a><i class="iconfont icon-arrow-right"></i><a href="/manage/users">员工管理</a><i class="iconfont icon-arrow-right"></i>添加员工</div>
+
+    <div id="create" class="from createuser">
+        <div class="item">
+            <div class="title">姓名</div>
+            <div class="input"><input type="text" value="" placeholder="请输入姓名" v-model="name" /></div>
+        </div>
+        <div class="item">
+            <div class="title">账号</div>
+            <div class="input"><input type="text" value="" placeholder="请输入手机号" v-model="account" /></div>
+        </div>
+        <div class="item">
+            <div class="title">Email</div>
+            <div class="input"><input type="text" value="" placeholder="请输入Email" v-model="email" /></div>
+        </div>
+        <div class="item">
+            <div class="title">密码</div>
+            <div class="input"><input type="password" value="" placeholder="请输入密码" v-model="password" /></div>
+        </div>
+        <div class="item">
+            <div class="title">确认密码</div>
+            <div class="input"><input type="password" value="" placeholder="再输入一次密码" v-model="password2" /></div>
+        </div>
+        <div class="item">
+            <div class="title">设置权限</div>
+            <div class="input checkbox">
+                <span v-for="(aut,index) in system_authority">
+                    <label v-bind:class="aut.is_checked?'cur':''" v-on:click="changeManage(aut)">
+                        <i v-bind:class="'iconfont '+(aut.is_checked?'icon-squarecheckfill':'icon-square')"></i><span>{{aut.name}}</span>
+                    </label>
+                </span>
+            </div>
+        </div>
+        <div class="item">
+            <button v-on:click="create">添加</button>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    new Vue({
+        el: '#create',
+        data: {
+            name: '',
+            account: '',
+            email: '',
+            password: '',
+            password2: '',
+            system_authority:@Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Models.Configs.system_authority)),
+        },
+        methods: {
+            create: function () {
+                var self = this,
+                    newData = $.extend({}, self._data);
+
+                newData.system_authority = [];
+                for (var i = 0; i < self.system_authority.length; i++) {
+                    if (self.system_authority[i].is_checked) {
+                        newData.system_authority.push(i);
+                    }
+                }
+                newData.system_authority = newData.system_authority.join(',');
+
+                layer.load();
+                $.post('/manage/adduser',newData, function (res) {
+                    layer.close();
+                    if (parseInt(res.result)) {
+                        layer.ok2(res.message, "/manage/users");
+                    } else {
+                        layer.warn(res.message);
+                    }
+                })
+            },
+            changeManage: function (_item) {
+                _item.is_checked =!_item.is_checked;
+            },
+            resetAuthority: function () {
+                var self = this,newArr=[];
+                for (var i = 0; i < self.system_authority.length; i++) {
+                    newArr.push({ id: i, name: self.system_authority[i], is_checked:false });
+                }
+                self.system_authority = newArr;
+            }
+        },
+        mounted: function () {
+            this.resetAuthority();
+        }
+    })
+
+</script>

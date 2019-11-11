@@ -1,0 +1,210 @@
+﻿@{
+    ViewBag.Title = "创建任务";
+    int id = Convert.ToInt32(Request["id"] ?? "0");
+}
+<script type="text/javascript" charset="utf-8" src="/Resouces/js/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="/Resouces/js/ueditor/ueditor.all.min.js?v=1.1"></script>
+
+<div class="center">
+    <div class="map">当前位置：<a href="/user/center">首页</a><i class="iconfont icon-arrow-right"></i><a href="/manage/tasks">任务管理</a><i class="iconfont icon-arrow-right"></i>创建任务</div>
+    <div id="publish" class="publish">
+        <div class="item">
+            <div class="title">任务标题</div>
+            <div class="input"><input type="text" value="" placeholder="请输入标题" v-model="task_name" /></div>
+        </div>
+        <div class="item">
+            <div class="title">任务内容</div>
+            <div class="input">
+                <script id="task_content" type="text/plain" style="width:100%; height:200px;">
+                </script>
+            </div>
+        </div>
+        <div class="item">
+            <div class="title">任务时间</div>
+            <div class="input time">
+                <input type="text" placeholder="开始时间" id="task_begin_time" v-model="task_begin_time" data-base-class="cxcalendar_holyday" readonly />
+                <label>—</label>
+                <input type="text" placeholder="结束时间" id="task_end_time" v-model="task_end_time" data-base-class="cxcalendar_holyday" readonly />
+            </div>
+        </div>
+        <div class="item">
+            <div class="title">任务类型</div>
+            <div class="input checkbox">
+                <label v-bind:class="task_type==0?'cur':''" v-on:click="task_type=0"><i v-bind:class="'iconfont '+(task_type==0?'icon-squarecheckfill':'icon-square')"></i><span>Bug</span></label>
+                <label v-bind:class="task_type==1?'cur':''" v-on:click="task_type=1"><i v-bind:class="'iconfont '+(task_type==1?'icon-squarecheckfill':'icon-square')"></i><span>新增</span></label>
+                <label v-bind:class="task_type==2?'cur':''" v-on:click="task_type=2"><i v-bind:class="'iconfont '+(task_type==2?'icon-squarecheckfill':'icon-square')"></i><span>优化</span></label>
+                <label v-bind:class="task_type==3?'cur':''" v-on:click="task_type=3"><i v-bind:class="'iconfont '+(task_type==3?'icon-squarecheckfill':'icon-square')"></i><span>升级</span></label>
+            </div>
+        </div>
+        <div class="item">
+            <div class="title">优先级</div>
+            <div class="input checkbox">
+                <label v-bind:class="task_priority==0?'cur':''" v-on:click="task_priority=0"><i v-bind:class="'iconfont '+(task_priority==0?'icon-squarecheckfill':'icon-square')"></i><span>普通</span></label>
+                <label v-bind:class="task_priority==1?'cur':''" v-on:click="task_priority=1"><i v-bind:class="'iconfont '+(task_priority==1?'icon-squarecheckfill':'icon-square')"></i><span>优先</span></label>
+                <label v-bind:class="task_priority==2?'cur':''" v-on:click="task_priority=2"><i v-bind:class="'iconfont '+(task_priority==2?'icon-squarecheckfill':'icon-square')"></i><span>紧急</span></label>
+            </div>
+        </div>
+        <div class="item">
+            <div class="title">执行人</div>
+            <div class="input">
+                <div class="executor">
+                    <div v-for="item in developer" v-bind:class="item.IsChecked?'cur':''" v-on:click="item.IsChecked=!item.IsChecked"><label class="user"><i v-bind:class="'iconfont '+(item.IsChecked?'icon-squarecheckfill':'icon-square')"></i><span>{{item.name}}</span></label></div>
+                </div>
+            </div>
+        </div>
+        <div class="item">
+            <button v-on:click="save">保存任务</button>
+        </div>
+    </div>
+</div>
+<link href="/Resouces/js/cxcalendar/css/jquery.cxcalendar.css" rel="stylesheet" />
+<script src="/Resouces/js/cxcalendar/js/jquery.cxcalendar.js"></script>
+<script src="/Resouces/js/cxcalendar/js/jquery.cxcalendar.languages.js"></script>
+<script>
+    var id=@id;
+    var app = new Vue({
+        el: '#publish',
+        data: {
+            editor: '',
+            task_name: '',
+            task_content: '',
+            api_begin_time: {},
+            api_end_time: {},
+            task_begin_time: '',
+            task_end_time: '',
+            task_priority: 0,
+            task_type: 0,
+            task_developer: [],
+            developer: []
+        },
+        methods: {
+            initEditor: function () {
+                this.editor = UE.getEditor('task_content');
+            },
+            initTimeControl: function () {
+                var self = this,
+                    dnow = new Date(),
+                    begin = $('#task_begin_time'),
+                    end = $('#task_end_time');
+
+                begin.cxCalendar({
+                    format: 'YYYY-MM-DD',
+                    language: 'zh-cn',
+                    startDate: dnow.getFullYear() + "-" + (dnow.getMonth() + 1) + "-" + (dnow.getDate())
+                }, function (api) {
+                    self.api_begin_time = api;
+                });
+
+                end.cxCalendar({
+                    format: 'YYYY-MM-DD',
+                    language: 'zh-cn',
+                    startDate: dnow.getFullYear() + "-" + (dnow.getMonth() + 1) + "-" + (dnow.getDate())
+                }, function (api) {
+                    self.api_end_time = api;
+                });
+
+
+                begin.bind('change', function () {
+                    self.task_begin_time = self.api_begin_time.getDate();
+                    self.api_end_time.setOptions({
+                        startDate: self.api_begin_time.getDate()
+                    });
+                    self.api_end_time.show();
+                });
+
+                end.bind('change', function () {
+                    self.task_end_time = self.api_end_time.getDate();
+                });
+            },
+            save: function () {
+                layer.load();
+                var self = this;
+                var newData = $.extend(self._data, {});
+                newData.task_content = self.editor.getContent();
+                for (var i = 0; i < self.developer.length; i++) {
+                    if (self.developer[i].IsChecked) {
+                        self.task_developer.push(self.developer[i].id);
+                    }
+                }
+                self.task_developer = self.task_developer.join(',');
+
+                delete newData.api_begin_time;
+                delete newData.api_end_time;
+                delete newData.editor;
+
+                if (id > 0) {
+                    newData.id = id;
+                }
+
+                $.post('/manage/'+(id>0?'SaveEdit':'SaveCreate'), newData, function (res) {
+                    layer.close();
+                    if (parseInt(res.result)) {
+                        layer.ok2(res.message,'/manage/tasks');
+                    } else {
+                        layer.warn(res.message);
+                    }
+                })
+            },
+            getDeveloper: function () {
+                var self = this;
+                $.getJSON('/manage/QueryUsers', function (res) {
+                    if (parseInt(res.result)) {
+                        for (var i = 0; i < res.data.length; i++) {
+                            res.data[i].IsChecked = false;
+                        }
+                        self.developer = res.data;
+                    } else {
+                        layer.warn('执行人加载失败');
+                    }
+                })
+            },
+            getInfo: function () {
+                var self = this;
+                layer.load();
+                $.getJSON('/manage/queryinfo', { id: id }, function (_res) {
+                    layer.close();
+                    
+                    if (parseInt(_res.result) == 0) { layer.fail2(_res.message,'/manage/tasks'); return; }
+
+                    var res = _res.data;
+                    self.task_name = res.task_name;
+
+                    var begin_date = new Date(parseInt(res.task_begin_time.replace("/Date(", "").replace(")/", ""), 10));
+                    var end_date = new Date(parseInt(res.task_end_time.replace("/Date(", "").replace(")/", ""), 10));
+
+                    self.task_begin_time = begin_date.getFullYear() + "-" + (begin_date.getMonth()+1) + "-" + begin_date.getDate();
+                    self.task_end_time = end_date.getFullYear() + "-" + (end_date.getMonth() + 1) + "-" + end_date.getDate();
+
+                    self.task_priority = res.task_priority;
+                    self.task_type = res.task_type;
+                    self.editor.ready(function () {
+                        self.editor.setContent(res.task_content);
+                        self.task_content = res.task_content;
+                    })
+
+                    var executer = res.task_developer.split(',');
+                    var s = setInterval(function () {
+                        if (self.developer.length > 0) {
+                            clearInterval(s);
+                            for (var i = 0; i < self.developer.length; i++) {
+                                if (executer.indexOf(self.developer[i].id+'')>-1) {
+                                    self.developer[i].IsChecked = true;
+                                }
+                            }
+                        }
+                    }, 500);
+                    //设置执行人
+                })
+            }
+        },
+        mounted: function () {
+            this.initEditor();
+            this.initTimeControl();
+            this.getDeveloper();
+            if (id > 0) {
+                this.getInfo();
+            }
+        }
+    })
+
+</script>

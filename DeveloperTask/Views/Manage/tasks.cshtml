@@ -1,0 +1,135 @@
+﻿
+@{
+    ViewBag.Title = "任务管理";
+}
+    <style>
+        .is_success_2 {background:#dadada !important; }
+    </style>
+<div class="center">
+    <div class="map">当前位置：<a href="/user/center">首页</a><i class="iconfont icon-arrow-right"></i>任务管理</div>
+    <div class="from" id="list">
+        <div class="filter">
+            <div>
+                <a href="javascript:void(0);" v-on:click="changeType(-1)" v-bind:class="type==-1?'cur':''">全部</a>
+                <a href="javascript:void(0);" v-on:click="changeType(0)" v-bind:class="type==0?'cur':''">Bug</a>
+                <a href="javascript:void(0);" v-on:click="changeType(1)" v-bind:class="type==1?'cur':''">新增</a>
+                <a href="javascript:void(0);" v-on:click="changeType(2)" v-bind:class="type==2?'cur':''">优化</a>
+                <a href="javascript:void(0);" v-on:click="changeType(3)" v-bind:class="type==3?'cur':''">升级</a>
+            </div>
+            <div>
+                <a href="/user/center"><i class="iconfont icon-peoplefill"></i>我的任务</a>
+                <a href="/manage/addtask"><i class="iconfont icon-writefill"></i>创建任务</a>
+            </div>
+        </div>
+        <div v-if="list.length<=0" class="empty"><i class="iconfont icon-furniture"></i><div>暂无任务，<a href="/manage/addtask">创建任务</a></div></div>
+        <div v-for="(item,index) in list" v-bind:class="'li is_success_'+(item.task.task_status)">
+            <div class="info">
+                <a class="title" v-bind:href="'addtask?id='+item.task.id"><label v-bind:class="'type-'+item.task.task_type">{{types[item.task.task_type]}}</label><strong>{{item.task.task_name}}</strong></a>
+                <div class="operate">{{item.task.task_status==2?'已完成（'+item.task.task_success_time+'）':''}}<a v-bind:href="'addtask?id='+item.task.id"><i class="iconfont icon-edit"></i>edit</a>&nbsp;&nbsp;<a href="javascript:void(0);" v-on:click="remove(item.task,index)"><i class="iconfont icon-delete"></i>delete</a></div>
+            </div>
+            <div class="time">
+                <div>
+                    <label>优先级：{{priority[item.task.task_priority]}}</label>
+                    <label>任务周期：{{item.task.task_begin_time}} 至 {{item.task.task_end_time}}</label>
+                    <label v-if="item.task.task_change_time==null">创建：{{item.task.task_create_time}}</label>
+                    <label v-if="item.task.task_change_time!=null">更新：{{item.task.task_change_time}}</label>
+                </div>
+                <div class="developer">
+                    执行人：<span v-for="u in item.users">{{u.name}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="pages" class="pages" style="text-align: center; margin-top: 20px"></div>
+</div>
+<link href="~/Resouces/js/laypage/skin/laypage.css" rel="stylesheet" />
+<script src="~/Resouces/js/laypage/laypage.js"></script>
+<script src="~/Resouces/js/moment.min.js"></script>
+<script src="~/Resouces/js/locale.js"></script>
+<script>
+
+    new Vue({
+        el: '#list',
+        data: {
+            page: 1,
+            size: 10,
+            list: [],
+            type: -1,
+            types:@Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Models.Configs.task_type)),
+            priority:@Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Models.Configs.task_priority))
+        },
+        methods: {
+            changeType: function (_type) {
+                var self = this;
+                self.type = _type;
+                self.getTasks();
+                self.getTaskCount();
+            },
+            getTasks: function () {
+                var self = this;
+                layer.load();
+                $.getJSON('/manage/QueryTasks', { type: self.type, page: self.page, size: self.size }, function (res) {
+                    layer.close();
+                    for (var i = 0; i < res.length; i++) {
+                        res[i].task.task_begin_time = moment(res[i].task.task_begin_time).format("YYYY-MM-DD");
+                        res[i].task.task_end_time = moment(res[i].task.task_end_time).format("YYYY-MM-DD");
+
+                        if (res[i].task.task_success_time != null) {
+                            res[i].task.task_success_time = moment(res[i].task.task_success_time).format("YYYY-MM-DD hh:mm:ss");
+                        }
+
+                        var m1 = moment(new Date());
+                        var m2 = moment(res[i].task.task_create_time);
+                        res[i].task.task_create_time = m1.to(m2);
+                        if (res[i].task.task_change_time != null) {
+                            var m3 = moment(res[i].task.task_change_time);
+                            res[i].task.task_change_time = m1.to(m3);
+                        }
+                    }
+                    self.list = res;
+                })
+            },
+            getTaskCount: function () {
+                var self = this;
+                $.getJSON('/manage/QueryTaskCount', { type: self.type }, function (res) {
+                    laypage({
+                        cont: 'pages',
+                        pages: Math.ceil(parseInt(res) / self.size),
+                        first: "首页",
+                        last: "尾页",
+                        curr: function () {
+                            var page = location.search.match(/page=(\d+)/);
+                            return page ? page[1] : 1;
+                        }(),
+                        jump: function (e, first) {
+                            if (!first) {
+                                self.page = e.curr;
+                                self.getTasks();
+                            }
+                        }
+                    });
+                })
+            },
+            remove: function (_item, _index) {
+                var self = this;
+                if (confirm('确定要删除吗？')) {
+                    layer.load();
+                    $.post('/manage/RemoveTask', { id: _item.id }, function (res) {
+                        layer.close();
+                        if (parseInt(res.result)) {
+                            self.list.splice(_index, 1);
+                        } else {
+                            layer.warn(res.message);
+                        }
+                    })
+                }
+            }
+        },
+        mounted: function () {
+            this.getTasks();
+            this.getTaskCount();
+        }
+    })
+
+
+</script>

@@ -1,0 +1,116 @@
+﻿html,body { height:100%; background: #e1e1e1; padding: 0; margin: 0; overflow: auto; font-size: 14px; }
+a { text-decoration: none; color: #333; }
+a:visited { color: #333; }
+a:hover { text-decoration: underline; color: #1f73b9; }
+.center { width: 750px; margin: 0 auto; }
+.main {min-height:100%;}
+.main-content { padding-bottom: 30px; }
+.footer { height: 30px; line-height:30px; margin-top: -30px; background: #d4d4d4; }
+.footer a{color:#999 }
+.top { box-sizing: border-box; background: #333; width: 100%; }
+.top > div { height: 50px; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+.top div, .top div a { color: #fff; }
+.top .uinfo { display: flex; justify-content: space-between; }
+.top .uinfo .name { position: relative; height: 50px; display: flex; justify-content: space-between; align-items:center; }
+.top .uinfo .name i.icon-unfold { font-size: 12px; }
+.top .uinfo .name .more { display: none; position: absolute; background: rgba(0,0,0,.7); width: 130px; box-sizing: border-box; top: 50px; right: 0 }
+.top .uinfo .name .more a { display: block; padding: 10px; text-align: center; border-bottom: 1px solid rgba(0,0,0,.2) }
+.top .uinfo .name .more a i { margin-right: 3px; }
+.top .uinfo .name .more a:hover { background: rgba(0,0,0,.2) }
+
+.map { margin:20px 0;color:#777 }
+
+.create_task { margin:20px 0;}
+.create_task a { font-size: 16px; display: inline-block; padding: 2px 10px; border-radius: 20px; border: 1px solid #fff; background: #fff; margin-right: 10px; }
+/*分页控件*/
+.laypageskin_default .laypage_curr { background: #1F73B9 !important; color: #fff; }
+.laypage_main button, .laypage_main input, .laypageskin_default a { border: none !important }
+.laypageskin_default span { height: 26px !important; line-height: 26px !important; }
+.from { margin-bottom: 20px; }
+.from .item { margin-bottom: 10px; box-sizing: border-box; }
+.from .item .title { color: #333; font-size: 16px; padding: 10px 0; }
+.from .item .input input { width: 100%; box-sizing: border-box; padding: 12px 10px; border-radius: 5px; outline: none; border: 1px solid #ddd; transition: all .3s ease-in-out; }
+.from .item .input input:hover { border: 1px solid #1f73b9; box-shadow: 0 0 8px #1f73b9; transition: all .3s ease-in-out; }
+.from .item .checkbox span { display: inline-block; }
+.from .item .checkbox span > label { display: flex; justify-content: flex-start; align-items: center; margin-right: 20px; transition: all .3s ease-in-out; }
+.from .item .checkbox span > label:hover { color: #1f73b9; transition: all .3s ease-in-out; }
+.from .item .checkbox span > label i { font-size: 26px; margin-right: 5px; }
+.from .item .checkbox span > label.cur { color: #1f73b9 !important }
+
+.from .item button { margin-top: 10px; padding: 10px 40px; background: #1f73b9; border: none; outline: none; color: #fff; border-radius: 5px; transition: all .3s ease-in-out; }
+.from .item button:hover { box-shadow: 0 0 8px #1f73b9; transition: all .3s ease-in-out; }
+
+.from .li { background: #fff; margin-bottom: 20px; border-top: 2px solid #1F73B9; transition: all .3s ease-in-out; padding: 20px; box-sizing: border-box; border-radius: 3px; }
+.from .li:hover { box-shadow: 0 0 15px rgba(0,0,0,.5); transition: all .3s ease-in-out; }
+.from .li .info { display: flex; justify-content: space-between; align-items: center; }
+.from .li .info .title label { display: inline-block; border-radius: 10px; padding: 0px 10px; font-size: 12px; margin-right: 5px; }
+.from .li .info .title label.type-0 { background: red !important; color: #fff; }
+.from .li .info .title label.type-1 { background: blue !important; color: #fff; }
+.from .li .info .title label.type-2 { background: #FFB900 !important; color: #fff; }
+.from .li .info .title label.type-3 { background: green !important; color: #fff; }
+.from .li .info .operate { display: flex; justify-content: space-between; }
+.from .li .info .operate .success {color:#999 }
+.from .li .info .operate button { border: none; background: #1f73b9; color: #fff; border-radius: 10px; outline: none; transition: all .3s ease-in-out; }
+.from .li .info .operate button:hover { background: #135084; transition: all .3s ease-in-out; }
+
+.from .li .time { padding-top: 10px; margin-top: 10px; border-top: 1px solid #e1e1e1; font-size: 0; display: flex; justify-content: space-between; }
+.from .li .time div { display: inline-block; }
+.from .li .time label { margin-right: 20px; color: #999; font-size: 13px; }
+.from .li .time .developer { color: #999; font-size: 13px; }
+.from .li .time .developer span { margin-left: 5px; }
+
+.from .filter { margin-bottom: 20px; font-size: 0; display: flex; justify-content: space-between;align-items:center; }
+.from .filter div { font-size:16px;}
+.from .filter div.status label { font-size: 16px; display: inline-block; padding: 2px 10px; border-radius: 20px; border: 1px solid #fff; background: #fff; margin-right: 10px; }
+.from .filter div.status label.cur { color: #1f73b9; }
+.from .filter div.status label:last-child{margin-right:0}
+.from .filter a { font-size: 16px; display: inline-block; padding: 2px 10px; border-radius: 20px; border: 1px solid #fff; background: #fff; margin-right: 10px; }
+.from .filter a.cur { background: #1f73b9; color: #fff; }
+.from .filter a:last-child { margin-right:0}
+.from .empty { color: #acacac; text-align: center; line-height: 1.5; }
+.from .empty i { font-size: 80px; }
+
+.from table { width:100%; border:none; border-collapse:collapse;}
+.from table td { border: 1px solid #333333; padding: 10px; }
+.from table td.cen {text-align:center }
+.from table thead { background: #1F73B9; color: #fff; text-align: center; }
+.from table tbody td.operate { width:150px;text-align:center; }
+.from table tbody tr:nth-child(2n+1) { background:#fff; }
+.from table tbody tr { transition:all .3s ease-in-out}
+.from table tbody tr:hover { background: #688ba9;color:#fff; transition:all .3s ease-in-out }
+.from table td.name i { color: #FAB727; font-size: 14px; }
+.from table td.account a { display: block; color: #666;font-size:12px; }
+
+.createuser { background: #fff; padding: 10px 20px; box-sizing: border-box; }
+
+.publish {background:#fff; padding:10px 20px;box-sizing:border-box; }
+.publish .item { margin-bottom: 10px; box-sizing: border-box; }
+.publish .item .title { color: #333; font-size: 16px; padding: 10px 0; }
+.publish .item .input input { width: 100%; box-sizing: border-box; padding: 12px 10px; border-radius: 5px; outline: none; border: 1px solid #ddd; transition: all .3s ease-in-out; }
+.publish .item .time { width: 100%; display: flex; justify-content: flex-start; align-items: center; }
+.publish .item .time > label { margin: 0 5px; color: #999 }
+.publish .item .time > input { width: 30%; background: #fff url(/Resouces/js/cxcalendar/css/cxcalendar.png) no-repeat 95% center; }
+.publish .item .input input:hover { border: 1px solid #1f73b9; box-shadow: 0 0 8px #1f73b9; transition: all .3s ease-in-out; }
+.publish .item .checkbox { display: flex; justify-content: flex-start; }
+.publish .item .checkbox > label { display: flex; justify-content: flex-start; align-items: center; margin-right: 20px; transition: all .3s ease-in-out; }
+.publish .item .checkbox > label:hover { color: #1f73b9; transition: all .3s ease-in-out; }
+.publish .item .checkbox > label i { font-size: 26px; margin-right: 5px; }
+.publish .item .checkbox > label.cur { color: #1f73b9 !important }
+.publish .item button { margin-top: 10px; padding: 10px 40px; background: #1f73b9; border: none; outline: none; color: #fff; border-radius: 5px; transition: all .3s ease-in-out; }
+.publish .item button:hover { box-shadow: 0 0 8px #1f73b9; transition: all .3s ease-in-out; }
+.publish .item .input .executor { background: #fff; width: 100%; box-sizing: border-box; padding: 12px 10px; border-radius: 5px; border: 1px solid #ddd; transition: all .3s ease-in-out; }
+.publish .item .input .executor div { display: inline-block; transition: all .3s ease-in-out; }
+.publish .item .input .executor div.cur { color: #1f73b9 !important }
+.publish .item .input .executor div:hover { color: #1f73b9; transition: all .3s ease-in-out; }
+.publish .item .input .executor:hover { border: 1px solid #1f73b9; box-shadow: 0 0 8px #1f73b9; transition: all .3s ease-in-out; }
+.publish .item .input .executor label { padding: 5px 10px; display: flex; justify-content: flex-start; align-items: center; }
+.publish .item .input .executor label i { margin-right: 5px; font-size: 20px; }
+
+.detail {margin-bottom:50px; }
+.detail .tool { margin-bottom:20px; }
+.detail .tool label { border-radius:20px;background:#fff;padding:2px 10px;margin-right:10px; transition:all .3s ease-in-out }
+.detail .tool label:hover { background: #adadad; color: #fff; transition: all .3s ease-in-out }
+.detail .line { height: 1px; background: #c7c7c7; }
+.detail .task_content { width: 750px; line-height: .5; }
+.detail .task_content img { max-width: 100%; }
+.detail .task_content img:hover { cursor: zoom-in }
