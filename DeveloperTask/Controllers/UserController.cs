@@ -10,9 +10,14 @@ namespace DeveloperTask.Controllers
     public class UserController : Controller
     {
         Db.TaskDbContext db = new Db.TaskDbContext();
+
+
+
         // GET: User
+        
         [HttpGet]
         [ValidateLogin(false)]
+        [Route("/")]
         public ActionResult Login()
         {
             return View();
