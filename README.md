@@ -1,4 +1,4 @@
-# taskmanagement
+# Mini版本：任务管理，bug跟踪管理系统
 关键字：任务管理、BUG管理<br>
 该网站适用于开发团队的日常任务分配管理和BUG跟踪管理<br><br>
 该项目采用：.NET MVC5+MYSQL5.7.26<br>
