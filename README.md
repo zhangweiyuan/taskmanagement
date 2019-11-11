@@ -1,7 +1,7 @@
 # taskmanagement
 关键字：任务管理、BUG管理<br>
 该网站适用于开发团队的日常任务分配管理和BUG跟踪管理<br><br>
-该项目采用：.NET MVC5+MYSQL<br>
+该项目采用：.NET MVC5+MYSQL5.7.26<br>
 数据库文件在根目录文件夹：mysql_db下，默认账号：13477030679 密码：123123
 <br><br>
 功能模块介绍：<br>
