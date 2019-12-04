@@ -489,6 +489,7 @@
     <Content Include="Views\Manage\addgroup.cshtml" />
     <Content Include="Views\Manage\editgroup.cshtml" />
     <Content Include="Views\Manage\Introduction.cshtml" />
+    <None Include="Properties\PublishProfiles\debug-姚顺军.pubxml" />
     <None Include="Properties\PublishProfiles\taskmanagement.pubxml" />
   </ItemGroup>
   <PropertyGroup>

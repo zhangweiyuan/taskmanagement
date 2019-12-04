@@ -50,10 +50,11 @@ a:hover { text-decoration: underline; color: #1f73b9; }
 .from .li .info .title label.type-1 { background: blue !important; color: #fff; }
 .from .li .info .title label.type-2 { background: #FFB900 !important; color: #fff; }
 .from .li .info .title label.type-3 { background: green !important; color: #fff; }
-.from .li .info .title strong { }
+.from .li .info .title > div { display:inline-block; }
 
-.prv-detail { color: #333; font-weight: normal;  position: absolute; z-index: 999; width: 750px; min-height: 100px; margin: 0 auto; background: #fff; border: 1px solid #333; padding: 10px; box-sizing: border-box; border-radius: 5px; }
-.prv-detail img { max-width: 100%; }
+.prv-detail { color: #333; font-weight: normal;  position: absolute; z-index: 3; width: 750px; margin: 0 auto; background: #fff; border: 1px solid #333; padding:5px 10px; box-sizing: border-box; border-radius: 5px; }
+.prv-detail div { line-height:23px; }
+.prv-detail div img { max-width: 100%; }
 
 .from .li .info .operate { display: flex; justify-content: space-between; }
 .from .li .info .operate .success {color:#999 }
@@ -119,6 +120,6 @@ a:hover { text-decoration: underline; color: #1f73b9; }
 .detail .tool label { border-radius:20px;background:#fff;padding:2px 10px;margin-right:10px; transition:all .3s ease-in-out }
 .detail .tool label:hover { background: #adadad; color: #fff; transition: all .3s ease-in-out }
 .detail .line { height: 1px; background: #c7c7c7; }
-.detail .task_content { width: 750px; line-height: .5; }
+.detail .task_content { width: 750px; line-height: 23px; }
 .detail .task_content img { max-width: 100%; }
 .detail .task_content img:hover { cursor: zoom-in }

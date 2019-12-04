@@ -22,7 +22,7 @@
             <div class="date">{{key}}</div>
             <div class="li" v-for="(item,index) in value">
                 <div class="info">
-                    <a class="title" target="_blank" style="position:relative;" v-bind:href="'detail?id='+item.task.id" v-on:mouseover="showDetail(item,$event)" v-on:mouseout="hideDetail($event)"><label v-bind:class="'type-'+item.task.task_type">{{types[item.task.task_type]}}</label><strong>{{item.task.task_name}}</strong></a>
+                    <a class="title" target="_blank" style="position:relative;" v-bind:href="'detail?id='+item.task.id"><label v-bind:class="'type-'+item.task.task_type">{{types[item.task.task_type]}}</label><div v-on:mouseover="showDetail(item,$event)" v-on:mouseleave="titleMouseout($event)">{{item.task.task_name}}</div></a>
                     <div class="operate" onmou>
                         <label class="success" v-if="item.task.task_status==2">已完成({{item.task.task_success_time}})</label>
                         <button v-if="item.task.task_status==0" v-on:click="success(item,index)">设置为已完成</button>
@@ -50,8 +50,6 @@
 <script src="~/Resouces/js/moment.min.js"></script>
 <script src="~/Resouces/js/locale.js"></script>
 <script>
-
-    var ishide = false;
     new Vue({
         el: '#list',
         data: {
@@ -88,18 +86,14 @@
             showDetail: function (res,e) {
                 var obj = $(e.target)[0];
                 if ($('.prv-detail').length > 0) { return;}
-                $(obj).append('<div class="prv-detail">' + res.task.task_content + '</div>');
-                $('.prv-detail').mouseover(function () {
-                    //ishide = false;
-                }).mousemove(function () {
-                     //$(obj).find('.prv-detail').remove();
-                });
+                $(obj).append('<div class="prv-detail"><div>' + res.task.task_content + '</div></div>');
+                $('.prv-detail').mouseleave(function () {
+                    $(this).remove();
+                })
             },
-            hideDetail: function (e) {
+            titleMouseout: function (e) {
                 var obj = $(e.target)[0];
-                setTimeout(function () {
-                    $(obj).find('.prv-detail').remove();
-                }, 500)
+                $(obj).find('.prv-detail').remove();
             },
             getTasks: function () {
                 var self = this;
@@ -130,7 +124,6 @@
                             date[res[i].task.task_begin_time] = [res[i]];
                         }
                     }
-                    console.log(date);
                     self.list = date;
                 })
             },
