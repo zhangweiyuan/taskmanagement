@@ -14,7 +14,7 @@ namespace DeveloperTask.Controllers
 
 
         // GET: User
-        
+
         [HttpGet]
         [ValidateLogin(false)]
         [Route("/")]
@@ -76,7 +76,8 @@ namespace DeveloperTask.Controllers
             var tasks = db.Database.SqlQuery<Models.Tasks>($"select * from tasks where 1=1" +
                 (isok ? ($" and task_status=2 ") : (" and task_status=0 ")) +
                 $" and task_developer REGEXP '^{uid}|{uid},|,{uid}$' " + where +
-                    $" order by task_priority desc,task_begin_time asc,task_create_time desc,task_change_time desc limit {(page - 1) * size},{size}");
+                //$" order by task_priority desc,task_begin_time asc,task_create_time desc,task_change_time desc limit {(page - 1) * size},{size}");
+                $" order by task_create_time desc limit {(page - 1) * size},{size}");
 
             var list = tasks.ToList<Models.Tasks>();
 
@@ -91,7 +92,7 @@ namespace DeveloperTask.Controllers
                         select new
                         {
                             task = a.q,
-                            publish=db.Users.Find(a.q.author_userid).name,
+                            publish = db.Users.Find(a.q.author_userid).name,
                             users = from u in db.Users
                                     where a.e.Contains(u.id.ToString())
                                     select u
