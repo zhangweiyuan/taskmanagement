@@ -157,6 +157,8 @@
     </Compile>
     <Compile Include="Helper\Comm.cs" />
     <Compile Include="Models\Configs.cs" />
+    <Compile Include="Models\Remind.cs" />
+    <Compile Include="Models\Endorses.cs" />
     <Compile Include="Models\Result.cs" />
     <Compile Include="Models\Groups.cs" />
     <Compile Include="Models\Users.cs" />
@@ -490,7 +492,7 @@
     <Content Include="Views\Manage\editgroup.cshtml" />
     <Content Include="Views\Manage\Introduction.cshtml" />
     <None Include="Properties\PublishProfiles\debug-姚顺军.pubxml" />
-    <None Include="Properties\PublishProfiles\taskmanagement.pubxml" />
+    <None Include="Properties\PublishProfiles\debug.xunyoukeji.com.pubxml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

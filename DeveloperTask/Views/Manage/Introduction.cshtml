@@ -1,27 +1,62 @@
 ﻿@{
     ViewBag.Title = "规则介绍";
 }
-<div class="center">
-    <div class="map">当前位置：<a href="/user/center">首页</a><i class="iconfont icon-arrow-right"></i>规则介绍</div>
-    <div id="create" class="from createuser">
-        <h1>规则介绍</h1>
-        <div style="line-height:2">
-            <ul>
-                <li>
-                    当员工拥有发布任务的权力时
-                    <ol>
-                        <li>A发布一条任务，如果没有设置执行人，那么A发布的这条任务只能在A自己的【<b><a href="/manage/tasks">任务管理</a></b>】中管理</li>
-                        <li>A发布一条任务，如果设置执行人A和B，那么A和B可以在自己的【<b><a href="/user/center">我的任务</a></b>】看到这条任务，同时A可以在自己的【<b><a href="/manage/tasks">任务管理</a></b>】中心管理</li>
-                    </ol>
-                </li>
-                <li>
-                    任务优先级说明
-                    <ol>
-                        <li>默认按照：紧急、优先、普通排序，其次按照任务的开始时间降序排序，再其次按照任务的创建时间和最后修改时间降序排序</li>
-                    </ol>
-                </li>
-            </ul>
+    <div class="center">
+        <div class="map">当前位置：<a href="/user/center">首页</a><i class="iconfont icon-arrow-right"></i>规则介绍</div>
+        <div id="create" class="from createuser">
+            <h1>规则介绍</h1>
+            <div style="line-height:2">
+                <ul>
+                    <li>
+                        当员工拥有发布任务的权力时
+                        <ol>
+                            <li>A发布一条任务，如果没有设置执行人，那么A发布的这条任务只能在A自己的【<b><a href="/manage/tasks">任务管理</a></b>】中管理</li>
+                            <li>A发布一条任务，如果设置执行人A和B，那么A和B可以在自己的【<b><a href="/user/center">我的任务</a></b>】看到这条任务，同时A可以在自己的【<b><a href="/manage/tasks">任务管理</a></b>】中心管理</li>
+                        </ol>
+                    </li>
+                    <li>
+                        查看任务权力
+                        <ol>
+                            <li>任务的【执行者】可以看到该任务（尽管他没有在可查看小组内），并且有权限设置【任务完成】</li>
+                            <li>发布者发布任务时选择对应的小组，那么该小组内的所有人都可以看到该任务。如果小组内所有人都不是执行者则所有人只能看不能操作</li>
+                        </ol>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div id="create" class="from createuser">
+            <h1>相关说明</h1>
+            <div style="line-height:2">
+                <ul>
+                    <li>
+                        适用场景
+                        <ol>
+                            <li>适用于项目测试阶段BUG的跟踪管理</li>
+                        </ol>
+                    </li>
+                    <li>
+                        该软件作者
+                        <ol>
+                            <li>张威远（开发）</li>
+                            <li>程超凡（原始版本借鉴）</li>
+                            <li>张明登（功能意见反馈）</li>
+                        </ol>
+                    </li>
+                    <li>
+                        关于版权
+                        <ol>
+                            <li>完全免费，github地址：<a style="color:#1F73B9" href="https://github.com/zhangweiyuan/taskmanagement" target="_blank">https://github.com/zhangweiyuan/taskmanagement</a></li>
+                        </ol>
+                    </li>
+                    <li>
+                        登录页面
+                        <ol>
+                            <li>登录页面背景图景点为：武当山某一处景点</li>
+                            <li><a style="color:#1F73B9" href="/Resouces/img/hubei_wudangshan.jpg" target="_blank">下载图片</a></li>
+                        </ol>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
-</div>
 

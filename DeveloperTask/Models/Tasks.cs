@@ -22,6 +22,7 @@ namespace Models
         public DateTime? task_create_time { get; set; }
         public DateTime? task_change_time { get; set; }
         public string task_developer { get; set; }
+        public string task_view { get; set; }
         /// <summary>
         /// 0Bug 1新增 2优化 3升级
         /// </summary>

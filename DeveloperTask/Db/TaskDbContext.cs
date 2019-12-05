@@ -22,5 +22,7 @@ namespace Db
         public DbSet<Models.Users> Users { get; set; }
         public DbSet<Models.Groups> Groups { get; set; }
         public DbSet<Models.GroupUsers> GroupUsers { get; set; }
+        public DbSet<Models.Endorses> Endorses { get; set; }
+        public DbSet<Models.Remind> Remind { get; set; }
     }
 }

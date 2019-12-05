@@ -268,13 +268,14 @@ namespace DeveloperTask.Controllers
         [ValidateInput(false)]
         public ActionResult SaveEdit(Models.Tasks task)
         {
-            if (string.IsNullOrEmpty(task.task_name))
-            {
-                return Json(new Models.Result(Models.ResultEnum.Fail, "error", "请输入任务标题"));
-            }
+            
             if (string.IsNullOrEmpty(task.task_content))
             {
                 return Json(new Models.Result(Models.ResultEnum.Fail, "error", "请输入任务内容"));
+            }
+            if (string.IsNullOrEmpty(task.task_name))
+            {
+                return Json(new Models.Result(Models.ResultEnum.Fail, "error", "请输入任务标题"));
             }
 
             Models.Tasks newtask = new Models.Tasks()
@@ -283,8 +284,8 @@ namespace DeveloperTask.Controllers
             };
             db.Entry(newtask).State = System.Data.Entity.EntityState.Unchanged;
 
-            newtask.task_begin_time = task.task_begin_time;
-            newtask.task_end_time = task.task_end_time;
+            //newtask.task_begin_time = task.task_begin_time;
+            //newtask.task_end_time = task.task_end_time;
 
             newtask.task_change_time = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
             newtask.author_userid = Convert.ToInt32(Session["uid"]);
@@ -293,6 +294,7 @@ namespace DeveloperTask.Controllers
             newtask.task_name = task.task_name;
             newtask.task_type = task.task_type;
             newtask.task_priority = task.task_priority;
+            newtask.task_view = task.task_view;
 
             var res = db.SaveChanges() > 0;
             if (res)

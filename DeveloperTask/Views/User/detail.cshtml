@@ -12,7 +12,7 @@
         <h2>@ViewBag.detail.task_name</h2>
         <div class="tool">
             <label>@priority@type</label>
-            <label>任务周期：@Convert.ToDateTime(ViewBag.detail.task_begin_time).ToString("yyyy-MM-dd")—@Convert.ToDateTime(ViewBag.detail.task_end_time).ToString("yyyy-MM-dd")</label>
+            @*<label>任务周期：@Convert.ToDateTime(ViewBag.detail.task_begin_time).ToString("yyyy-MM-dd")—@Convert.ToDateTime(ViewBag.detail.task_end_time).ToString("yyyy-MM-dd")</label>*@
             @if (ViewBag.detail.task_change_time == null)
             {
                 <label>创建时间：@Convert.ToDateTime(ViewBag.detail.task_create_time).ToString("yyyy-MM-dd HH:mm:ss")</label>

@@ -1,6 +1,8 @@
 ﻿
 @{
     ViewBag.Title = "任务中心";
+    int uid = Convert.ToInt32(Session["uid"]);
+    string name = Session["name"].ToString();
 }
 <div class="center">
     <div class="map">当前位置：<a href="javascript:void(0);">首页</a><i class="iconfont icon-arrow-right"></i>我的任务</div>
@@ -25,19 +27,23 @@
                     <a class="title" target="_blank" style="position:relative;" v-bind:href="'detail?id='+item.task.id"><label v-bind:class="'type-'+item.task.task_type">{{types[item.task.task_type]}}</label><div v-on:mouseover="showDetail(item,$event)" v-on:mouseleave="titleMouseout($event)">{{item.task.task_name}}</div></a>
                     <div class="operate" onmou>
                         <label class="success" v-if="item.task.task_status==2">已完成({{item.task.task_success_time}})</label>
-                        <button v-if="item.task.task_status==0" v-on:click="success(item,index)">设置为已完成</button>
+                        <button v-if="item.task.task_status==0&&item.task.isOperat" v-on:click="success(item,index)">设置为已完成</button>
                     </div>
                 </div>
                 <div class="time">
                     <div>
                         <label>优先级：{{priority[item.task.task_priority]}}</label>
-                        <label>任务周期：{{item.task.task_begin_time}} 至 {{item.task.task_end_time}}</label>
+                        @*<label>任务周期：{{item.task.task_begin_time}} 至 {{item.task.task_end_time}}</label>*@
                         <label v-if="item.task.task_change_time==null">创建：{{item.task.task_create_time}}</label>
                         <label v-if="item.task.task_change_time!=null">更新：{{item.task.task_change_time}}</label>
                     </div>
                     <div class="developer">
-                        发布者:<span>{{item.publish}}</span>，执行者:<span v-for="u in item.users">{{u.name}}</span>
+                        发布者:<span>{{item.publish}}</span>，执行者:<span v-for="u in item.users">{{u.name}}</span><span class="email" v-on:click="remind(item.task.id)"><i class="iconfont icon-noticefill"></i>提醒他</span>
                     </div>
+                </div>
+                <div class="sns">
+                    <div class="opinion"><span class="" v-on:click="endorse(item)"><i class="iconfont icon-appreciate_fill_light"></i> 我也赞同</span></div>
+                    <div class="endorse" v-if="item.endorse.length>0"><span v-for="end in item.endorse" v-bind:data-endid="end.id">{{end.name}}</span></div>
                 </div>
             </div>
         </template>
@@ -50,9 +56,23 @@
 <script src="~/Resouces/js/moment.min.js"></script>
 <script src="~/Resouces/js/locale.js"></script>
 <script>
+
+    Array.prototype.contains = function (val) {
+        var IsOk = false;
+        for (var i = 0; i < this.length; i++) {
+            if (val == this[i]) {
+                IsOk = true;
+                break;
+            }
+        }
+        return IsOk;
+    }
+
     new Vue({
         el: '#list',
         data: {
+            uid:@uid,
+            name:'@name',
             page: 1,
             size: 10,
             list: [],
@@ -69,7 +89,8 @@
                 self.getTasks();
                 self.getTaskCount();
             },
-            success: function (_item,_index) {
+            success: function (_item, _index) {
+                console.log(_item); return;
                 var self = this;
                 if (confirm('确定要设置完成吗？')) {
                     var data = { taskid: _item.task.id, status: 2 };
@@ -83,6 +104,25 @@
                     })
                 }
             },
+            remind: function (_task_id) {
+                layer.load();
+                $.post('/user/remind', { task_id: _task_id }, function (res) {
+                    switch (parseInt(res)) {
+                        case -1:
+                            layer.warn('邮箱配置错误');
+                            break;
+                        case 0:
+                            layer.fail('操作失败');
+                            break;
+                        case 1:
+                            layer.ok('提醒成功');
+                            break;
+                        default:
+                            layer.warn('请隔'+res+'分钟后再提醒');
+                            break;
+                    }
+                })
+            },
             showDetail: function (res,e) {
                 var obj = $(e.target)[0];
                 if ($('.prv-detail').length > 0) { return;}
@@ -95,6 +135,30 @@
                 var obj = $(e.target)[0];
                 $(obj).find('.prv-detail').remove();
             },
+            endorse: function (_item) {
+                var self = this;
+                layer.load();
+                $.post('/user/endorse', { task_id: _item.task.id }, function (res) {
+                    layer.close();
+                    if (parseInt(res)) {
+                        layer.ok('操作成功');
+                        var b = true;
+                        for (var i = 0; i < _item.endorse.length; i++) {
+                            if (_item.endorse[i].user_id == self.uid) {
+                                //删除
+                                b = false;
+                                _item.endorse.splice(i, 1);
+                                break;
+                            }
+                        }
+                        if (b) {
+                            _item.endorse.push({ user_id: self.uid, name: self.name });
+                        }
+                    } else {
+                        layer.warn('操作失败');
+                    }
+                })
+            },
             getTasks: function () {
                 var self = this;
                 layer.load();
@@ -103,11 +167,14 @@
                     var date = {};
                     for (var i = 0; i < res.length; i++) {
 
-                        res[i].task.task_begin_time = moment(res[i].task.task_begin_time).format("YYYY-MM-DD");
-                        res[i].task.task_end_time = moment(res[i].task.task_end_time).format("YYYY-MM-DD");
+                        //res[i].task.task_begin_time = moment(res[i].task.task_begin_time).format("YYYY-MM-DD");
+                        //res[i].task.task_end_time = moment(res[i].task.task_end_time).format("YYYY-MM-DD");
 
                         var m1 = moment(new Date());
                         var m2 = moment(res[i].task.task_create_time);
+
+                        res[i].task.createTime = moment(res[i].task.task_create_time).format("YYYY-MM-DD");
+
                         res[i].task.task_create_time = m1.to(m2);
                         if (res[i].task.task_change_time != null) {
                             var m3 = moment(res[i].task.task_change_time);
@@ -118,11 +185,17 @@
                             res[i].task.task_success_time = moment(res[i].task.task_success_time).format("YYYY/MM/DD hh:mm:ss");
                         }
 
-                        if (date[res[i].task.task_begin_time] != undefined) {
-                            date[res[i].task.task_begin_time].push(res[i]);
+                        if (date[res[i].task.createTime] != undefined) {
+                            date[res[i].task.createTime].push(res[i]);
                         } else {
-                            date[res[i].task.task_begin_time] = [res[i]];
+                            date[res[i].task.createTime] = [res[i]];
                         }
+
+                        res[i].task.isOperat = res[i].task.task_developer.split(',').contains(self.uid);
+
+                        //加载赞同的人
+                        //res[i].task.endorse = ['张威远','张明登','王传炜'];
+
                     }
                     self.list = date;
                 })
@@ -132,7 +205,7 @@
                 $.getJSON('/user/QueryMyTaskCount', { isok: self.isok, type: self.type }, function (res) {
                     laypage({
                         cont: 'pages',
-                        pages: Math.ceil(parseInt(res) / self.size),
+                        pages: Math.ceil(parseInt(res[0]) / self.size),
                         first: "首页",
                         last: "尾页",
                         curr: function () {

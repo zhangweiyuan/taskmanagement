@@ -32,7 +32,7 @@
                 <div class="time">
                     <div>
                         <label>优先级：{{priority[item.task.task_priority]}}</label>
-                        <label>任务周期：{{item.task.task_begin_time}} 至 {{item.task.task_end_time}}</label>
+                        @*<label>任务周期：{{item.task.task_begin_time}} 至 {{item.task.task_end_time}}</label>*@
                         <label v-if="item.task.task_change_time==null">创建：{{item.task.task_create_time}}</label>
                         <label v-if="item.task.task_change_time!=null">更新：{{item.task.task_change_time}}</label>
                     </div>
@@ -75,8 +75,8 @@
                     layer.close();
                     var date = {};
                     for (var i = 0; i < res.length; i++) {
-                        res[i].task.task_begin_time = moment(res[i].task.task_begin_time).format("YYYY-MM-DD");
-                        res[i].task.task_end_time = moment(res[i].task.task_end_time).format("YYYY-MM-DD");
+                        //res[i].task.task_begin_time = moment(res[i].task.task_begin_time).format("YYYY-MM-DD");
+                        //res[i].task.task_end_time = moment(res[i].task.task_end_time).format("YYYY-MM-DD");
 
                         if (res[i].task.task_success_time != null) {
                             res[i].task.task_success_time = moment(res[i].task.task_success_time).format("YYYY-MM-DD hh:mm:ss");
@@ -84,17 +84,20 @@
 
                         var m1 = moment(new Date());
                         var m2 = moment(res[i].task.task_create_time);
+
+                        res[i].task.createTime = moment(res[i].task.task_create_time).format("YYYY-MM-DD");
                         res[i].task.task_create_time = m1.to(m2);
+
                         if (res[i].task.task_change_time != null) {
                             var m3 = moment(res[i].task.task_change_time);
                             res[i].task.task_change_time = m1.to(m3);
                         }
 
 
-                        if (date[res[i].task.task_begin_time] != undefined) {
-                            date[res[i].task.task_begin_time].push(res[i]);
+                         if (date[res[i].task.createTime] != undefined) {
+                            date[res[i].task.createTime].push(res[i]);
                         } else {
-                            date[res[i].task.task_begin_time] = [res[i]];
+                            date[res[i].task.createTime] = [res[i]];
                         }
 
                     }

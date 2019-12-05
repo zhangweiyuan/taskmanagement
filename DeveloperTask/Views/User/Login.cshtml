@@ -1,14 +1,15 @@
 ﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "登录你的 Task Management 账户";
+    ViewBag.Title = "登录你的 BUG跟踪管理 账户";
 }
 <style>
     body { background: url(/Resouces/img/hubei_wudangshan.jpg); }
     .login { border-radius: 0px; background: rgba(255,255,255,1); padding: 30px; width: 450px; box-sizing: border-box; position: fixed; top: 50%; margin-top: -160px; left: 50%; margin-left: -225px }
+    .login .debug-title {font-weight:bold;text-align:center;font-size:18px; }
 </style>
 <div class="center">
     <div class="login">
-        <div><img src="~/Resouces/img/task.png" /></div>
+        <div class="debug-title">BUG跟踪管理工具</div>
         <div id="login" class="from" style="margin-bottom:0;">
             <div class="item">
                 <div class="title">账号</div>

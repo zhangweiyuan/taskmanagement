@@ -8,30 +8,30 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 -- Table structure for groups
 -- ----------------------------
-DROP TABLE IF EXISTS `groups`;
+-- DROP TABLE IF EXISTS `groups`;
 CREATE TABLE `groups` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for groupusers
 -- ----------------------------
-DROP TABLE IF EXISTS `groupusers`;
+-- DROP TABLE IF EXISTS `groupusers`;
 CREATE TABLE `groupusers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `group_id` int(11) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for tasks
 -- ----------------------------
-DROP TABLE IF EXISTS `tasks`;
+-- DROP TABLE IF EXISTS `tasks`;
 CREATE TABLE `tasks` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `author_userid` int(11) DEFAULT NULL,
@@ -48,12 +48,12 @@ CREATE TABLE `tasks` (
   `task_type` int(11) DEFAULT NULL COMMENT '0Bug 1新增 2优化 3升级',
   `task_success_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for users
 -- ----------------------------
-DROP TABLE IF EXISTS `users`;
+-- DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) DEFAULT NULL,
@@ -66,7 +66,25 @@ CREATE TABLE `users` (
   `is_delete` int(1) DEFAULT NULL COMMENT '0正常 1删除',
   `system_authority` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 INSERT INTO `users` (`name`, `account`, `password`, `weixin_openid`, `email`, `sex`, `create_time`, `is_delete`, `system_authority`) VALUES ('师傅', '13477030679', '4297f44b13955235245b2497399d7a93', NULL, '669247240@qq.com', '0', '2019-10-31 17:25:22', '0', '0,1,2,3,4,5,6');
 
+
+
+CREATE TABLE `endorses` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `task_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `remind` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `task_id` int(11) DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
